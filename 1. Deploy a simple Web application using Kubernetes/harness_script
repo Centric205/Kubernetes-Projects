@@ -1,0 +1,35 @@
+curl -LO https://github.com/harness/harness-cli/releases/download/v0.0.16-Preview/harness-v0.0.16-Preview-linux-amd64.tar.gz 
+tar -xvf harness-v0.0.16-Preview-linux-amd64.tar.gz 
+export PATH="$(pwd):$PATH" 
+echo 'export PATH="'$(pwd)':$PATH"' >> ~/.bash_profile
+
+
+harness login --api-key pat.wamj3iF8TGqd-jjGbzq8Jw.655fbc1e60e3f525d44c1d0d.3u58PQ2VZu0F3Sh7QYkR --account-id wamj3iF8TGqd-jjGbzq8Jw
+
+
+git clone https://github.com/Centric205/harnesscd-example-apps.git && cd harnesscd-example-apps
+
+
+
+harness secret  --token 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 apply
+
+
+harness connector --file guestbook/harnesscd-pipeline/github-connector.yml apply --git-user Centric205 
+
+
+
+harness connector --file guestbook/harnesscd-pipeline/kubernetes-connector.yml apply --delegate-name kubernetes-delegate
+
+
+harness service --file guestbook/harnesscd-pipeline/service.yml apply
+
+
+harness environment --file guestbook/harnesscd-pipeline/environment.yml apply
+
+
+
+harness infrastructure  --file guestbook/harnesscd-pipeline/infrastructure-definition.yml apply
+
+
+
+harness pipeline --file guestbook/harnesscd-pipeline/canary-pipeline.yml apply
